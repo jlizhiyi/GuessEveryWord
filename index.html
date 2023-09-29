@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Name Every Word!</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f0f0f0;
+            padding: 30px;
+        }
+        h1 {
+            color: #333;
+        }
+        #count-message {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        #error-message {
+            color: red;
+        }
+        #word-form {
+            margin-bottom: 20px;
+        }
+        #word-input {
+            padding: 5px;
+        }
+        h2 {
+            color: #666;
+        }
+        ul {
+            height: 200px;
+            overflow-y: scroll;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        li {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>You know English?</h1>
+    <h2>Name every word in the English language.</h2>
+
+    <form id="word-form">
+        <input type="text" id="word-input" placeholder="Enter a word">
+        <button type="submit">Submit</button>
+        <button type="reset" id="reset-button" style="background-color: red; color: white;">Reset</button>
+    </form>
+
+    <div id="error-message"></div>
+    <div id="count-message"></div>
+
+    <h2>Last 25 Words:</h2>
+    <ul id="last25-words"></ul>
+
+    <h2>All Words:</h2>
+    <ul id="all-words"></ul>
+
+    <script>
+        $('#word-form').submit(function(event) {
+            event.preventDefault();
+
+            let word = $('#word-input').val();
+            $('#word-input').val('');
+
+            $.ajax({
+                url: 'http://localhost:5000/check_word',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    word: word
+                }),
+                success: function(response) {
+                    $('#error-message').text('');
+                    $('#count-message').text('You have named ' + response.count + ' word(s).');
+                    $('#last25-words').empty();
+                    for (let word of response.last25Words) {
+                        $('#last25-words').append('<li>' + word + '</li>');
+                    }
+                    $('#all-words').empty();
+                    for (let word of response.allWords) {
+                        $('#all-words').append('<li>' + word + '</li>');
+                    }
+                },
+                error: function(response) {
+                    $('#error-message').text(response.responseJSON.error);
+                }
+            });
+        });
+    </script>
+    <script>
+        $('#word-form').submit(function(event) {
+            event.preventDefault();
+    
+            let word = $('#word-input').val();
+            $('#word-input').val('');
+    
+            // Your existing AJAX request code here...
+        });
+    
+        // Event listener for the Reset button
+        $('#reset-button').click(function(event) {
+            event.preventDefault();
+    
+            // Clear the input field
+            $('#word-input').val('');
+    
+            // Reset error and count messages
+            $('#error-message').text('');
+            $('#count-message').text('');
+    
+            // Clear the lists
+            $('#last25-words').empty();
+            $('#all-words').empty();
+        });
+    </script>
+    </body>
+    </html>
+    
+</body>
+</html>
