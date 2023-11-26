@@ -36,5 +36,12 @@ def check_word():
         'allWords': sorted(named_words)
     })
 
+@app.route('/clear_data', methods=['POST']) 
+def clear_data():
+    global named_words, count
+    named_words = [] # reset words array
+    count = 0 # reset count
+    return "Data cleared"
+
 if __name__ == '__main__':
     app.run(debug=True)
