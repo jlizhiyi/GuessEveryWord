@@ -94,13 +94,6 @@
         });
     </script>
     <script>
-        $('#word-form').submit(function(event) {
-            event.preventDefault();
-    
-            let word = $('#word-input').val();
-            $('#word-input').val('');
-        });
-    
         // Event listener for the Reset button
         $('#reset-button').click(function(event) {
             event.preventDefault();
@@ -115,6 +108,15 @@
             // Clear the lists
             $('#last25-words').empty();
             $('#all-words').empty();
+
+            // Clear data from server
+            $.ajax({
+                url: 'http://localhost:5000/clear_data',
+                method: 'POST',
+                success: function(response) {
+                    console.log(response); // Data cleared
+                }
+            });
         });
     </script>
     </body>
